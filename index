@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>📋 Fiches Élèves — Compétition Physique × IA</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface-2: #334155;
+      --accent: #6366f1;
+      --accent-light: #818cf8;
+      --text: #f1f5f9;
+      --text-dim: #94a3b8;
+      --green: #22c55e;
+      --orange: #f97316;
+      --red: #ef4444;
+      --blue: #3b82f6;
+      --gold: #fbbf24;
+      --radius: 12px;
+      --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+	 /* En-tête avec espace pour le logo EIGSI */
+        .header {
+            background: linear-gradient(135deg, var(--eigsi-bleu) 0%, var(--eigsi-bleu-clair) 100%);
+            color: white;
+            padding: var(--spacing-lg);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+    }
+    .hero {
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e293b 100%);
+      padding: 50px 24px 40px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+    .hero .subtitle {
+      font-size: 1.15rem;
+      color: var(--accent-light);
+      max-width: 680px;
+      margin: 0 auto 24px;
+    }
+    .hero-badges {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .badge {
+      background: rgba(99,102,241,0.15);
+      border: 1px solid rgba(99,102,241,0.4);
+      color: var(--accent-light);
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15,23,42,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(99,102,241,0.2);
+      padding: 12px 0;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      gap: 8px;
+    }
+    .nav-btn {
+      flex-shrink: 0;
+      background: var(--surface);
+      border: 1px solid var(--surface-2);
+      color: var(--text-dim);
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover { border-color: var(--accent); color: var(--accent-light); }
+    .nav-btn.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+    .rules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 28px 0;
+    }
+    .rule-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-2);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+    }
+    .rule-card .icon { font-size: 1.8rem; margin-bottom: 8px; }
+    .rule-card .label { font-size: 0.78rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+    .rule-card .value { font-size: 1.1rem; font-weight: 700; }
+    .scoring-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 0.92rem;
+    }
+    .scoring-table th {
+      background: var(--surface-2);
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 700;
+      color: var(--accent-light);
+    }
+    .scoring-table td {
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(148,163,184,0.15);
+    }
+    .scoring-table tr:last-child td { border-bottom: none; }
+    .project {
+      background: var(--surface);
+      border: 1px solid var(--surface-2);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin: 28px 0;
+    }
+    .project-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .project-icon {
+      font-size: 2.6rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .project-header h2 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .project-header .tagline {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+    }
+    .difficulty {
+      display: flex;
+      gap: 3px;
+      margin-left: auto;
+    }
+    .star { font-size: 1.2rem; }
+    .star.on { color: var(--gold); }
+    .star.off { color: var(--surface-2); }
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--accent-light);
+      margin: 24px 0 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(99,102,241,0.2);
+    }
+    .phase {
+      display: flex;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(148,163,184,0.08);
+    }
+    .phase:last-child { border-bottom: none; }
+    .phase-time {
+      flex-shrink: 0;
+      width: 110px;
+      font-weight: 700;
+      color: var(--blue);
+      font-size: 0.88rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .phase-content { flex: 1; }
+    .phase-content strong { color: var(--text); }
+    .phase-content ol { padding-left: 20px; margin-top: 6px; }
+    .phase-content ol li { margin-bottom: 4px; font-size: 0.92rem; color: var(--text-dim); }
+    .info-box {
+      background: rgba(99,102,241,0.08);
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 16px 0;
+    }
+    .info-box h4 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent-light);
+      margin-bottom: 10px;
+    }
+    .info-box ul { padding-left: 20px; }
+    .info-box ul li { margin-bottom: 4px; font-size: 0.92rem; }
+    .formula {
+      background: #0f172a;
+      border: 1px solid var(--surface-2);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-family: 'Courier New', monospace;
+      color: var(--green);
+      display: inline-block;
+      margin: 4px 0;
+      font-size: 0.9rem;
+    }
+    .question-list {
+      list-style: none;
+      padding: 0;
+    }
+    .question-list li {
+      background: rgba(251,191,36,0.08);
+      border-left: 3px solid var(--gold);
+      padding: 10px 14px;
+      margin-bottom: 8px;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.92rem;
+    }
+    .question-list li::before {
+      content: "\2754 ";
+    }
+    .materials-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+    }
+    .material-chip {
+      background: var(--surface-2);
+      border: 1px solid rgba(148,163,184,0.2);
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      color: var(--text-dim);
+    }
+    .final-challenge {
+      background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(34,197,94,0.04));
+      border: 1px solid rgba(34,197,94,0.3);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin: 16px 0;
+    }
+    .final-challenge h4 {
+      color: var(--green);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--surface-2);
+    }
+    .timeline {
+      display: flex;
+      height: 36px;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 16px 0;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+    .timeline-seg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align: center;
+      padding: 0 4px;
+      overflow: hidden;
+    }
+    @media (max-width: 700px) {
+      .phase { flex-direction: column; gap: 4px; }
+      .phase-time { width: auto; }
+      .project { padding: 20px; }
+      .hero h1 { font-size: 1.7rem; }
+    }
+  </style>
+</head>
+<body>
+<!-- En-tête avec espace pour le logo EIGSI -->
+    <header class="header">
+        <div class="logo-placeholder">
+            <!-- Insérer ici le logo de l'EIGSI Casablanca -->
+            <img src="https://i.ibb.co/XxgZtVWv/logo.png" class="logo" alt="Logo EIGSI Casablanca">
+<section class="hero">
+  <h1>Fiches &Eacute;l&egrave;ves &mdash; Comp&eacute;tition Physique augmentée</h1>
+  <p class="subtitle">
+    3 projets ludiques pour d&eacute;couvrir la physique et l'intelligence artificielle.
+    Format : 4 heures &middot; Groupes de 4 &agrave; 5 &eacute;tudiants ing&eacute;nieurs de 1re ann&eacute;e.
+  </p>
+  <div class="hero-badges">
+    <span class="badge">4 heures</span>
+    <span class="badge">4&ndash;5 &eacute;tudiants</span>
+    <span class="badge">IA + Physique</span>
+    <span class="badge">1re ann&eacute;e</span>
+  </div>
+</section>
+
+<nav class="nav" id="nav">
+  <div class="nav-inner" id="navInner"></div>
+</nav>
+
+<div class="container">
+
+<section id="intro">
+  <h2 style="font-size:1.8rem;font-weight:800;margin:32px 0 8px;">R&egrave;gles communes</h2>
+  <p style="color:var(--text-dim);max-width:680px;margin-bottom:8px;">
+    Bienvenue ! Vous allez participer &agrave; une comp&eacute;tition de 4 heures o&ugrave; vous devrez
+    <strong style="color:var(--text)">construire, mesurer et optimiser</strong> un dispositif
+    physique &agrave; l'aide de l'intelligence artificielle. Chaque projet est accompagn&eacute;
+    d'un <strong style="color:var(--accent-light)">notebook Python</strong> pr&ecirc;t &agrave; l'emploi.
+  </p>
+
+  <div class="rules-grid">
+    <div class="rule-card"><div class="icon">&#x1F465;</div><div class="label">Equipe</div><div class="value">4 &agrave; 5 &eacute;tudiants</div></div>
+    <div class="rule-card"><div class="icon">&#x23F1;&#xFE0F;</div><div class="label">Dur&eacute;e</div><div class="value">4 heures chrono</div></div>
+    <div class="rule-card"><div class="icon">&#x1F4E6;</div><div class="label">Livrable</div><div class="value">D&eacute;mo + 3 slides</div></div>
+    <div class="rule-card"><div class="icon">&#x1F4BB;</div><div class="label">Outil IA</div><div class="value">1 PC / &eacute;quipe</div></div>
+  </div>
+
+  <h3 class="section-title">Grille de notation</h3>
+  <table class="scoring-table">
+    <tr><th>Crit&egrave;re</th><th>Description</th><th style="text-align:right;">Points</th></tr>
+    <tr><td>&#x1F3C6; Performance</td><td>R&eacute;ussite du d&eacute;fi final mesurable</td><td style="text-align:right;">/ 50</td></tr>
+    <tr><td>&#x1F52C; Physique</td><td>Explication correcte des ph&eacute;nom&egrave;nes</td><td style="text-align:right;">/ 25</td></tr>
+    <tr><td>&#x1F916; IA</td><td>Usage pertinent de l'IA pour optimiser</td><td style="text-align:right;">/ 15</td></tr>
+    <tr><td>&#x1F465; Equipe</td><td>Collaboration &amp; qualit&eacute; de pr&eacute;sentation</td><td style="text-align:right;">/ 10</td></tr>
+  </table>
+
+  <h3 class="section-title">Chronologie type d'une session</h3>
+  <div class="timeline">
+    <div class="timeline-seg" style="flex:15;background:var(--surface-2);">Briefing 15min</div>
+    <div class="timeline-seg" style="flex:25;background:#4338ca;">Construction 60min</div>
+    <div class="timeline-seg" style="flex:18;background:#6366f1;">Etalonnage 45min</div>
+    <div class="timeline-seg" style="flex:22;background:#818cf8;">Modelisation IA 60min</div>
+    <div class="timeline-seg" style="flex:20;background:#22c55e;">Demo 30min</div>
+  </div>
+
+  <div class="info-box">
+    <h4>Esprit de la comp&eacute;tition</h4>
+    <ul>
+      <li>On construit d'abord, on mesure, puis l'IA nous aide &agrave; optimiser &mdash; pas l'inverse</li>
+      <li>L'IA propose, l'humain d&eacute;cide : si l'IA sugg&egrave;re quelque chose d'impossible, adaptez</li>
+      <li>Mesurez avec soin : vos donn&eacute;es d'entr&eacute;e conditionnent la qualit&eacute; de l'optimisation</li>
+      <li>G&eacute;rez votre temps : surveillez le chrono, gardez 30 min pour la pr&eacute;sentation</li>
+      <li>Amusez-vous ! L'esprit de comp&eacute;tition est ludique, pas stressant</li>
+    </ul>
+  </div>
+</section>
+
+<div id="p1"></div>
+<section class="project">
+  <div class="project-header">
+    <div class="project-icon">&#x1F3F0;</div>
+    <div>
+      <h2>Projet 1 &mdash; Tr&eacute;buchet de pr&eacute;cision</h2>
+      <p class="tagline">Optimisation bay&eacute;sienne des tirs de balistique</p>
+    </div>
+    <div class="difficulty"><span class="star on">&#9733;</span><span class="star on">&#9733;</span><span class="star off">&#9733;</span></div>
+  </div>
+  <h3 class="section-title">Objectif &amp; d&eacute;fi final</h3>
+  <p>Construire un mini-tr&eacute;buchet capable de lancer une balle de ping-pong sur des cibles plac&eacute;es &agrave; diff&eacute;rentes distances. L'IA vous aidera &agrave; trouver les meilleurs param&egrave;tres de tir.</p>
+  <div class="final-challenge">
+    <h4>D&eacute;fi final</h4>
+    <p>3 tirs sur 3 cibles &agrave; distances diff&eacute;rentes (2 m, 3 m, 4 m). Points = pr&eacute;cision (distance &agrave; la cible).</p>
+  </div>
+  <h3 class="section-title">Mat&eacute;riel fourni</h3>
+  <div class="materials-list">
+    <span class="material-chip">Kit bois/carton pr&eacute;d&eacute;coup&eacute;</span><span class="material-chip">Balle de ping-pong</span>
+    <span class="material-chip">Cibles (gobelets)</span><span class="material-chip">M&egrave;tre ruban</span><span class="material-chip">Rapporteur</span>
+    <span class="material-chip">Notebook trebuchet.ipynb</span>
+  </div>
+  <h3 class="section-title">D&eacute;roul&eacute; (4h)</h3>
+  <div class="phase"><div class="phase-time">0:00 &ndash; 1:00</div><div class="phase-content"><strong>Construction</strong><ol><li>Assemblez le tr&eacute;buchet selon le sch&eacute;ma fourni</li><li>Identifiez les param&egrave;tres r&eacute;glables : angle, masse du contrepoids, longueur du bras</li><li>Notez les plages possibles de chaque param&egrave;tre</li></ol></div></div>
+  <div class="phase"><div class="phase-time">1:00 &ndash; 1:30</div><div class="phase-content"><strong>Etalonnage</strong><ol><li>Effectuez 6 &agrave; 8 tirs exploratoires</li><li>Notez dans le notebook : (angle, masse, longueur) &rarr; distance</li><li>Observez : quel param&egrave;tre influence le plus la port&eacute;e ?</li></ol></div></div>
+  <div class="phase"><div class="phase-time">1:30 &ndash; 2:30</div><div class="phase-content"><strong>Optimisation IA</strong><ol><li>Ouvrez le notebook trebuchet.ipynb</li><li>Entrez vos donn&eacute;es d'&eacute;talonnage</li><li>Lancez l'optimisation bay&eacute;sienne &mdash; l'IA propose les param&egrave;tres optimaux pour chaque distance</li><li>Notez les pr&eacute;dictions de l'IA</li></ol></div></div>
+  <div class="phase"><div class="phase-time">2:30 &ndash; 3:30</div><div class="phase-content"><strong>Tir de pr&eacute;cision</strong><ol><li>Pour chaque cible, r&eacute;glez le tr&eacute;buchet selon les param&egrave;tres de l'IA</li><li>Un seul tir par cible</li><li>Mesurez l'&eacute;cart &agrave; la cible</li></ol></div></div>
+  <div class="phase"><div class="phase-time">3:30 &ndash; 4:00</div><div class="phase-content"><strong>Pr&eacute;sentation (3 slides)</strong><ol><li>Slide 1 : sch&eacute;ma du tr&eacute;buchet + &eacute;quations de balistique</li><li>Slide 2 : comment l'IA a optimis&eacute; vos tirs</li><li>Slide 3 : r&eacute;sultats et analyse des &eacute;carts</li></ol></div></div>
+  <div class="info-box">
+    <h4>Notions de physique &agrave; ma&icirc;triser</h4>
+    <ul>
+      <li>Equation de la port&eacute;e : <span class="formula">R = v0^2 sin(2a) / g</span></li>
+      <li>Energie : <span class="formula">Ep = mc . g . h -&gt; Ek = 1/2 mp v0^2</span></li>
+      <li>Angle optimal th&eacute;orique = 45&deg; (sans frottements)</li>
+      <li>Moment d'inertie du bras</li>
+    </ul>
+  </div>
+  <h3 class="section-title">Apport de l'IA</h3>
+  <p><strong>Optimisation bay&eacute;sienne (Processus Gaussien)</strong> : l'algorithme apprend la relation entre vos param&egrave;tres et la port&eacute;e &agrave; partir de quelques tirs, puis propose les r&eacute;glages optimaux pour chaque cible.</p>
+  <h3 class="section-title">Questions de r&eacute;flexion (bonus)</h3>
+  <ul class="question-list">
+    <li>Pourquoi l'angle optimal r&eacute;el diff&egrave;re-t-il de 45&deg; ?</li>
+    <li>Quel param&egrave;tre l'IA a-t-elle le plus modifi&eacute; ? Pourquoi ?</li>
+    <li>Que se passe-t-il si on augmente la masse du contrepoids au-del&agrave; d'un certain seuil ?</li>
+  </ul>
+</section>
+
+<div id="p2"></div>
+<section class="project">
+  <div class="project-header">
+    <div class="project-icon">&#x1F35D;</div>
+    <div>
+      <h2>Projet 2 &mdash; Pont en spaghetti optimis&eacute;</h2>
+      <p class="tagline">Algorithme g&eacute;n&eacute;tique de topologie de treillis</p>
+    </div>
+    <div class="difficulty"><span class="star on">&#9733;</span><span class="star on">&#9733;</span><span class="star off">&#9733;</span></div>
+  </div>
+  <h3 class="section-title">Objectif &amp; d&eacute;fi final</h3>
+  <p>Concevoir un pont en spaghetti et colle qui maximise le ratio <strong>charge support&eacute;e / masse du pont</strong>. L'IA fait &eacute;voluer la topologie du treillis pour proposer la meilleure g&eacute;om&eacute;trie.</p>
+  <div class="final-challenge">
+    <h4>D&eacute;fi final</h4>
+    <p>Le pont doit franchir une trav&eacute;e de 40 cm. On ajoute des poids au centre jusqu'&agrave; rupture. Score = charge max / masse du pont.</p>
+  </div>
+  <h3 class="section-title">Mat&eacute;riel fourni</h3>
+  <div class="materials-list">
+    <span class="material-chip">500 g de spaghetti</span><span class="material-chip">Colle &agrave; chaud + pistolet</span>
+    <span class="material-chip">Poids de test (1 g &ndash; 500 g)</span><span class="material-chip">Balance de pr&eacute;cision</span>
+    <span class="material-chip">Notebook pont_spaghetti.ipynb</span>
+  </div>
+  <h3 class="section-title">D&eacute;roul&eacute; (4h)</h3>
+  <div class="phase"><div class="phase-time">0:00 &ndash; 0:45</div><div class="phase-content"><strong>Tests mat&eacute;riaux</strong><ol><li>Mesurez la r&eacute;sistance d'un spaghetti en traction puis en compression</li><li>Mesurez la r&eacute;sistance d'un triangle (3 poutres)</li><li>Comprenez : traction = solide, compression = flambage</li><li>Notez vos mesures dans le notebook</li></ol></div></div>
+  <div class="phase"><div class="phase-time">0:45 &ndash; 2:00</div><div class="phase-content"><strong>Optimisation IA</strong><ol><li>D&eacute;finissez les contraintes : trav&eacute;e = 40 cm, n&oelig;uds sur une grille</li><li>Lancez l'algorithme g&eacute;n&eacute;tique (30 g&eacute;n&eacute;rations)</li><li>Observez l'&eacute;volution du fitness (r&eacute;sistance/masse)</li><li>Notez la meilleure topologie : nombre de poutres, angles, n&oelig;uds</li></ol></div></div>
+  <div class="phase"><div class="phase-time">2:00 &ndash; 3:30</div><div class="phase-content"><strong>Construction</strong><ol><li>Construisez le treillis propos&eacute; par l'IA</li><li>Respectez les longueurs et angles sugg&eacute;r&eacute;s</li><li>Pesez votre pont (objectif : &lt; 200 g)</li><li>Adaptez si n&eacute;cessaire (l'IA propose, l'humain d&eacute;cide)</li></ol></div></div>
+  <div class="phase"><div class="phase-time">3:30 &ndash; 4:00</div><div class="phase-content"><strong>Test de charge</strong><ol><li>Pr&eacute;sentez votre pont au jury</li><li>Ajout progressif de poids au centre</li><li>Notez la charge de rupture &mdash; calculez votre score</li></ol></div></div>
+  <div class="info-box">
+    <h4>Notions de physique &agrave; ma&icirc;triser</h4>
+    <ul>
+      <li>Equilibre statique : <span class="formula">Somme F = 0, Somme M = 0</span></li>
+      <li>Compression vs traction : flambage d'Euler</li>
+      <li>Treillis : poutres en traction ou compression pure</li>
+      <li>Contrainte : <span class="formula">sigma = F / S</span></li>
+    </ul>
+  </div>
+  <h3 class="section-title">Apport de l'IA</h3>
+  <p><strong>Algorithme g&eacute;n&eacute;tique</strong> : chaque individu est une g&eacute;om&eacute;trie de pont, le fitness = r&eacute;sistance estim&eacute;e / masse. Le notebook visualise l'&eacute;volution des g&eacute;n&eacute;rations et affiche le meilleur treillis.</p>
+  <h3 class="section-title">Questions de r&eacute;flexion</h3>
+  <ul class="question-list">
+    <li>Pourquoi les triangles sont-ils la forme privil&eacute;gi&eacute;e ?</li>
+    <li>L'IA a-t-elle propos&eacute; des formes contre-intuitives ?</li>
+    <li>Quelle a &eacute;t&eacute; la principale diff&eacute;rence entre votre id&eacute;e initiale et le r&eacute;sultat de l'IA ?</li>
+  </ul>
+</section>
+
+<div id="p3"></div>
+<section class="project">
+  <div class="project-header">
+    <div class="project-icon">&#x1F3A2;</div>
+    <div>
+      <h2>Projet 3 &mdash; Machine de Rube Goldberg</h2>
+      <p class="tagline">Planification par cha&icirc;ne de Markov</p>
+    </div>
+    <div class="difficulty"><span class="star on">&#9733;</span><span class="star on">&#9733;</span><span class="star on">&#9733;</span></div>
+  </div>
+  <h3 class="section-title">Objectif &amp; d&eacute;fi final</h3>
+  <p>Construire une cha&icirc;ne d'au moins 8 transferts d'&eacute;nergie qui accomplissent une action finale (&eacute;teindre une bougie, d&eacute;poser une bille dans un gobelet). L'IA vous aide &agrave; ordonner les modules pour maximiser la fiabilit&eacute;.</p>
+  <div class="final-challenge">
+    <h4>D&eacute;fi final</h4>
+    <p>La machine doit fonctionner du d&eacute;but &agrave; la fin sans intervention. Score = nombre d'&eacute;tapes r&eacute;ussies &times; fiabilit&eacute; (sur 3 essais).</p>
+  </div>
+  <h3 class="section-title">Mat&eacute;riel fourni</h3>
+  <div class="materials-list">
+    <span class="material-chip">Mat&eacute;riel de r&eacute;cup&eacute;ration (billes, dominos, tubes, planches)</span>
+    <span class="material-chip">Ressorts, ficelle, gobelets</span><span class="material-chip">Bougie + briquet</span>
+    <span class="material-chip">Chronom&egrave;tre</span><span class="material-chip">Notebook rube_goldberg.ipynb</span>
+  </div>
+  <h3 class="section-title">D&eacute;roul&eacute; (4h)</h3>
+  <div class="phase"><div class="phase-time">0:00 &ndash; 0:30</div><div class="phase-content"><strong>Inventaire et id&eacute;es</strong><ol><li>Listez le mat&eacute;riel disponible</li><li>Proposez 10 &agrave; 12 modules possibles (domino &rarr; bille &rarr; levier &rarr; ...)</li><li>Estimez la probabilit&eacute; de r&eacute;ussite de chaque module (50% ? 80% ?)</li></ol></div></div>
+  <div class="phase"><div class="phase-time">0:30 &ndash; 1:30</div><div class="phase-content"><strong>Planification IA</strong><ol><li>Saisissez vos modules et leurs probabilit&eacute;s de transition</li><li>L'algorithme mod&eacute;lise une cha&icirc;ne de Markov et calcule la fiabilit&eacute; globale</li><li>Il propose l'ordre optimal des modules (chemin de fiabilit&eacute; maximale)</li><li>Comparez avec votre intuition</li></ol></div></div>
+  <div class="phase"><div class="phase-time">1:30 &ndash; 3:30</div><div class="phase-content"><strong>Assemblage</strong><ol><li>Construisez la machine dans l'ordre sugg&eacute;r&eacute;</li><li>Testez module par module</li><li>Ajustez les transferts d'&eacute;nergie (angles, hauteurs, ressorts)</li><li>Effectuez 3 essais complets</li></ol></div></div>
+  <div class="phase"><div class="phase-time">3:30 &ndash; 4:00</div><div class="phase-content"><strong>La course</strong><ol><li>Lancement devant jury</li><li>3 essais autoris&eacute;s</li><li>Score = &eacute;tapes r&eacute;ussies &times; essais r&eacute;ussis sur 3</li></ol></div></div>
+  <div class="info-box">
+    <h4>Notions de physique &agrave; ma&icirc;triser</h4>
+    <ul>
+      <li>Conservation de l'&eacute;nergie : <span class="formula">E_tot = Ep + Ek + E_ressort + E_perdue</span></li>
+      <li>Conversions : potentielle &rarr; cin&eacute;tique &rarr; &eacute;lastique &rarr; sonore</li>
+      <li>Pertes : frottements, chocs in&eacute;lastiques</li>
+      <li>Cha&icirc;ne de Markov : <span class="formula">P(succ&egrave;s) = Produit P(etape i)</span></li>
+    </ul>
+  </div>
+  <h3 class="section-title">Apport de l'IA</h3>
+  <p><strong>Recherche de trajectoire / cha&icirc;ne de Markov</strong> : mod&eacute;liser le graphe des &eacute;tapes possibles et trouver le chemin d'&eacute;nergie le plus fiable. L'IA aide &agrave; ordonner les modules pour minimiser le risque de panne en cascade.</p>
+  <h3 class="section-title">Questions de r&eacute;flexion</h3>
+  <ul class="question-list">
+    <li>O&ugrave; sont les principales pertes d'&eacute;nergie ?</li>
+    <li>L'IA a-t-elle plac&eacute; les modules les plus fiables au d&eacute;but ou &agrave; la fin ? Pourquoi ?</li>
+    <li>Ajouter une &eacute;tape augmente-t-il toujours le score ?</li>
+  </ul>
+</section>
+
+
+</section>
+
+<section id="annexe" class="project" style="border-color: rgba(99,102,241,0.3);">
+  <h2 style="font-size:1.5rem;font-weight:800;margin-bottom:20px;">Annexe &mdash; R&eacute;capitulatif mat&eacute;riel</h2>
+  <table class="scoring-table">
+    <tr><th>Projet</th><th>Mat&eacute;riel principal</th></tr>
+    <tr><td>Tr&eacute;buchet</td><td>Kit bois, balle ping-pong</td></tr>
+    <tr><td>Pont spaghetti</td><td>500 g spaghetti, colle chaude</td></tr>
+    <tr><td>Rube Goldberg</td><td>Mat&eacute;riel de r&eacute;cup&eacute;ration</td></tr>
+    
+  </table>
+  <div class="info-box" style="margin-top:20px;">
+    <h4>Biblioth&egrave;ques Python pr&eacute;install&eacute;es</h4>
+    <p style="font-family:monospace;color:var(--green);">numpy &middot; matplotlib &middot; scikit-learn &middot; scipy &middot; opencv-python &middot; pandas</p>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  Comp&eacute;tition Physique augmentée &mdash; 3 projets &middot; 4h &middot; groupes de 4&ndash;5 &middot; 1re ann&eacute;e ing&eacute;nieur
+</footer>
+
+<script>
+  const projects = [
+    { id: 'intro',   label: 'R&egrave;gles' },
+    { id: 'p1',       label: 'Tr&eacute;buchet' },
+    { id: 'p2',       label: 'Pont spaghetti' },
+    { id: 'p3',       label: 'Rube Goldberg' },
+    { id: 'annexe',   label: 'Annexe' },
+  ];
+  const navInner = document.getElementById('navInner');
+  projects.forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'nav-btn';
+    btn.innerHTML = p.label;
+    btn.onclick = () => {
+      document.getElementById(p.id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    navInner.appendChild(btn);
+  });
+  const navBtns = document.querySelectorAll('.nav-btn');
+  window.addEventListener('scroll', () => {
+    let current = projects[0].id;
+    const scrollY = window.scrollY + 120;
+    projects.forEach(p => {
+      const el = document.getElementById(p.id);
+      if (el && el.offsetTop <= scrollY) current = p.id;
+    });
+    navBtns.forEach((btn, i) => {
+      btn.classList.toggle('active', projects[i].id === current);
+    });
+  });
+</script>
+
+</body>
+</html>
